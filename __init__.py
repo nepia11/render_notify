@@ -5,7 +5,8 @@ from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
 import watchdog
 
-from config import discord_webhook_url, bot_name
+# from config import discord_webhook_url, bot_name, path
+import config
 
 
 class MyHandler(PatternMatchingEventHandler):
@@ -60,11 +61,11 @@ def action(event):
     message = f"create {filename} {timestr}"
     print(message)
     # webhookを叩いたりする
-    discord_webhook(discord_webhook_url, message, bot_name)
+    discord_webhook(config.discord_webhook_url, message, config.bot_name)
 
 
 if __name__ == "__main__":
-    path = os.path.dirname(__file__)
+    path = config.path
 
     print("start")
     watch(path, action, "*")
