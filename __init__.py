@@ -34,8 +34,8 @@ class MyHandler(PatternMatchingEventHandler):
         pass
 
 
-def watch(path, command, extension):
-    event_handler = MyHandler(command, ["*" + extension])
+def watch(path, command, patterns):
+    event_handler = MyHandler(command, patterns)
     observer = Observer()
     observer.schedule(event_handler, path, recursive=True)
     observer.start()
@@ -68,4 +68,4 @@ if __name__ == "__main__":
     path = config.path
 
     print("start")
-    watch(path, action, "*")
+    watch(path, action, config.match_patterns)
