@@ -4,6 +4,7 @@ import requests
 from watchdog.observers import Observer
 from watchdog.events import PatternMatchingEventHandler
 import watchdog
+import pathlib
 
 # from config import discord_webhook_url, bot_name, path
 import config
@@ -58,7 +59,7 @@ def discord_webhook(webhook_url, message, name):
 def action(event):
     filename = os.path.basename(event.src_path)
     timestr = time.strftime("%Y-%m-%d %H:%M:%S")
-    message = f"create {filename} {timestr}"
+    message = f"[create] {filename} {timestr}"
     print(message)
     # webhookを叩いたりする
     discord_webhook(config.discord_webhook_url, message, config.bot_name)
@@ -66,6 +67,11 @@ def action(event):
 
 if __name__ == "__main__":
     path = config.path
+    # pathの正規化的な
+    path = pathlib.Path(path)
+    if not path.is_dir():
+        path = path.parent
+    str_path = str(path.absolute())
 
     print("start")
-    watch(path, action, config.match_patterns)
+    watch(str_path, action, config.match_patterns)
